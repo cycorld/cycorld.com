@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Anthropic Agent Decomposition 세션 정리와 실전 가이드">
+<title>Agent는 프롬프트가 아니라 구조로 좋아진다 | cycorld</title>
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f)})(window,document,'script','dataLayer','GTM-MTWNTBB');</script>
+<style>
+:root{color-scheme:light dark}body{max-width:44rem;margin:6vh auto;padding:0 1rem;font:16px/1.7 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}a{color:inherit}nav{margin:1rem 0 2rem;padding:.75rem 0;border-top:1px solid #ddd;border-bottom:1px solid #ddd}nav a{display:inline-block;margin-right:1rem;font-weight:600;text-decoration:none}h1{font-size:1.8rem;line-height:1.25}h2{margin-top:2rem}code,pre{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}pre{overflow:auto;padding:1rem;background:#eee;color:#111}blockquote{border-left:3px solid #999;margin-left:0;padding-left:1rem;color:#555}table{border-collapse:collapse;width:100%;font-size:.95rem}td,th{border:1px solid #ccc;padding:.35rem;text-align:left}.muted,time{color:#777}@media(prefers-color-scheme:dark){nav{border-color:#444}pre{background:#111;color:#eee}blockquote{color:#aaa}td,th{border-color:#444}}</style>
+</head>
+<body>
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MTWNTBB" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<nav aria-label="site"><a href="/">Home</a><a href="/blog/">Blog</a><a href="/projects.html">Projects</a><a href="/profile.html">Profile</a></nav>
+<article>
+<header>
+<h1>Agent는 프롬프트가 아니라 구조로 좋아진다</h1>
+<p><time datetime="2026-07-03">2026-07-03</time></p>
+<p class="muted">Anthropic Code w/ Claude 2026 Agent Decomposition 세션을 보고 정리한 글입니다.</p>
+</header>
+
+<blockquote>Agent 개선은 긴 프롬프트가 아니라 <strong>Eval → Skill → Tool → Subagent</strong> 구조 재설계로 합니다.</blockquote>
+
+<h2>원본 링크</h2>
+<ul>
+<li>X 영상: <a href="https://x.com/etudecn/status/2072321319140782304">淘沙者(TheSandPicker) 공유 영상</a></li>
+<li>공식 세션 페이지: <a href="https://claude.com/code-with-claude/session/sf-ext-compose-multi-agent-systems-with-skills-and-mcp">Tool, skill, or subagent? Decomposing an agent that outgrew its prompt</a></li>
+<li>워크숍 코드: <a href="https://github.com/anthropics/cwc-workshops/tree/main/agent-decomposition">anthropics/cwc-workshops — agent-decomposition</a></li>
+</ul>
+<p class="muted">공개 검색 기준으로 YouTube 원본 URL은 확인하지 못했습니다. 현재 확인 가능한 공개 영상은 X에 업로드된 44분 38초 녹화본이고, 공식 원문은 Claude 세션 페이지와 GitHub 워크숍 저장소입니다. YouTube 공개본이 확인되면 링크를 교체하겠습니다.</p>
+
+<h2>한 줄 요약</h2>
+<p>Agent가 복잡해져 성능이 떨어질 때, 더 좋은 모델이나 더 긴 system prompt를 찾기 전에 다음 순서로 봐야 합니다.</p>
+<pre>Eval 실행 → 실패 원인 분류 → Prompt 축소 → Skill 분리 → Tool 정리 → Subagent 재판단 → Eval 재실행</pre>
+
+<h2>예제: StockPilot</h2>
+<p>영상의 예제는 야외용품 리테일러를 위한 재고관리 Agent <code>StockPilot</code>입니다.</p>
+<ul>
+<li>재고 부족 감지</li>
+<li>수요 예측</li>
+<li>공급업체 선택</li>
+<li>발주서 작성</li>
+<li>주간 리포트 작성</li>
+</ul>
+
+<table>
+<thead><tr><th>항목</th><th>Before</th><th>After</th></tr></thead>
+<tbody>
+<tr><td>System prompt</td><td>402 lines</td><td>15 lines</td></tr>
+<tr><td>Tools</td><td>12개</td><td>핵심 primitive 중심</td></tr>
+<tr><td>Hardcoded subagents</td><td>3개</td><td>0개, runtime decision</td></tr>
+<tr><td>Eval score</td><td>약 71%</td><td>약 92%</td></tr>
+<tr><td>F1 daily sweep</td><td>488초, 102 tool calls</td><td>약 100초, 3 scripts</td></tr>
+</tbody>
+</table>
+
+<p>핵심은 지식을 버리는 것이 아닙니다. 항상 context에 넣던 지식을 필요한 순간에만 로드하도록 바꾸는 것입니다.</p>
+
+<h2>1. Eval 없이 Agent를 고치지 않는다</h2>
+<p>Agent 개선은 감으로 하지 않습니다. Eval 점수로 hill climbing 합니다.</p>
+<p>Eval은 정답 여부만 보지 않습니다.</p>
+<ul>
+<li>pass/fail</li>
+<li>latency</li>
+<li>turn count</li>
+<li>tool call 수</li>
+<li>token usage</li>
+<li>비용</li>
+<li>output format</li>
+<li>LLM-as-judge 품질 평가</li>
+</ul>
+<p>즉 Agent 품질은 <strong>정확도 + 비용 + 속도 + 운영 안정성</strong>을 같이 봐야 합니다.</p>
+
+<h2>2. System prompt는 짧아야 한다</h2>
+<p>나쁜 패턴은 새 요구사항, 예외, 보고서 형식, 정책이 생길 때마다 system prompt에 계속 추가하는 것입니다.</p>
+<p>system prompt에는 다음만 남깁니다.</p>
+<ul>
+<li>Agent의 역할</li>
+<li>전역 안전 규칙</li>
+<li>작업 원칙</li>
+<li>tool / skill / subagent를 선택하는 상위 기준</li>
+</ul>
+<p>나머지는 skill로 뺍니다.</p>
+<ul>
+<li>도메인 정책</li>
+<li>계산 절차</li>
+<li>보고서 템플릿</li>
+<li>예외 처리 규칙</li>
+<li>특정 업무에서만 필요한 지식</li>
+</ul>
+<p>이 방식이 progressive disclosure입니다. 필요한 정보만 그때그때 context에 공개합니다.</p>
+
+<h2>3. Tool은 custom tool보다 primitive부터</h2>
+<p>Agent에게 처음부터 업무별 custom tool을 많이 붙이지 말고, 인간이 컴퓨터에서 쓰는 기본 능력을 먼저 줍니다.</p>
+<ul>
+<li>파일 읽기</li>
+<li>파일 쓰기</li>
+<li>bash</li>
+<li>code execution</li>
+<li>web search</li>
+<li>todo list</li>
+<li>filesystem navigation</li>
+</ul>
+<p>CSV 분석을 예로 들면, CSV 전체를 context에 반환하지 말고 Agent가 Python script를 작성해 필요한 결과만 가져오게 합니다.</p>
+<blockquote>데이터를 모델 머리에 다 넣지 말고, 모델에게 컴퓨터를 쓰게 하라.</blockquote>
+
+<h2>4. Subagent는 두 경우에만 쓴다</h2>
+<p>Subagent는 유용하지만 비쌉니다. 다음 둘 중 하나일 때만 씁니다.</p>
+<ol>
+<li>병렬로 많은 Claude를 던지고 싶을 때: deep research, web search, codebase exploration, 여러 후보안 탐색</li>
+<li>fresh mind가 필요할 때: 코드 리뷰, 독립 검증, forecasting</li>
+</ol>
+<p>반대로 subagent의 output이 단순 숫자 하나라면 보통 subagent가 아니라 tool이나 code execution이 맞습니다.</p>
+
+<h2>판단표</h2>
+<table>
+<thead><tr><th>상황</th><th>선택</th><th>이유</th></tr></thead>
+<tbody>
+<tr><td>항상 필요한 역할/원칙</td><td>System prompt</td><td>모든 작업에 적용</td></tr>
+<tr><td>특정 작업에서만 필요한 절차</td><td>Skill</td><td>필요할 때만 context 로드</td></tr>
+<tr><td>파일/CSV/계산/탐색</td><td>Code execution / bash</td><td>token 절약, 정확도 상승</td></tr>
+<tr><td>명확한 외부 API 호출</td><td>Custom tool</td><td>I/O와 권한이 명확할 때</td></tr>
+<tr><td>여러 Agent가 공유하는 표준 도구</td><td>MCP</td><td>재사용과 거버넌스</td></tr>
+<tr><td>병렬 탐색 또는 독립 검증</td><td>Subagent</td><td>별도 context가 가치 있을 때</td></tr>
+<tr><td>단순 기능 추가</td><td>Subagent 금지</td><td>복잡도만 증가</td></tr>
+</tbody>
+</table>
+
+<h2>실제 적용 절차</h2>
+<ol>
+<li>현재 Agent 구조를 inventory 한다.</li>
+<li>최소 eval 10개를 만든다.</li>
+<li>실패 원인을 prompt, skill, tool, subagent, data, eval 문제로 분류한다.</li>
+<li>system prompt를 10~30줄 수준으로 줄인다.</li>
+<li>업무 절차는 skill로 이동한다.</li>
+<li>custom tool을 primitive tool로 대체할 수 있는지 본다.</li>
+<li>subagent는 병렬성 또는 fresh context가 없으면 제거한다.</li>
+<li>수정 후 eval을 다시 돌린다.</li>
+</ol>
+
+<h2>바로 쓰는 체크리스트</h2>
+<ul>
+<li>system prompt 길이를 잰다</li>
+<li>항상 필요한 정보와 가끔 필요한 정보를 나눈다</li>
+<li>가끔 필요한 정보는 skill로 뺀다</li>
+<li>custom tool을 primitive tool로 대체할 수 있는지 본다</li>
+<li>subagent는 병렬성/fresh mind가 없으면 제거한다</li>
+<li>최소 10개 eval을 만든다</li>
+<li>token, latency, tool call 수를 같이 본다</li>
+<li>수정할 때마다 eval을 다시 돌린다</li>
+<li>좋아진 것만 merge한다</li>
+</ul>
+
+<h2>마무리</h2>
+<p>이 세션의 핵심은 “AI assistant를 많이 만들라”가 아닙니다.</p>
+<blockquote>Agent는 프롬프트로 커지는 것이 아니라, 구조로 성장해야 한다.</blockquote>
+<pre>System prompt는 짧게.
+업무 지식은 Skill로.
+데이터 처리는 Code execution으로.
+Subagent는 꼭 필요할 때만.
+개선은 Eval로 증명.</pre>
+</article>
+</body>
+</html>
