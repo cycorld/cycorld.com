@@ -6,7 +6,7 @@
 <meta name="description" content="cycorld blog">
 <title>Blog | cycorld</title>
 <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f)})(window,document,'script','dataLayer','GTM-MTWNTBB');</script>
-<style>:root{color-scheme:light dark}body{max-width:42rem;margin:8vh auto;padding:0 1rem;font:16px/1.65 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}a{color:inherit}nav{margin:1rem 0 2rem;padding:.75rem 0;border-top:1px solid #ddd;border-bottom:1px solid #ddd}nav a{display:inline-block;margin-right:1rem;font-weight:600;text-decoration:none}time{color:#777}.post{margin-top:2rem}@media(prefers-color-scheme:dark){nav{border-color:#444}}</style>
+<style>:root{color-scheme:light dark}body{max-width:42rem;margin:8vh auto;padding:0 1rem;font:16px/1.65 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}a{color:inherit}nav{margin:1rem 0 2rem;padding:.75rem 0;border-top:1px solid #ddd;border-bottom:1px solid #ddd}nav a{display:inline-block;margin-right:1rem;font-weight:600;text-decoration:none}time{color:#777}.filters{display:flex;gap:.5rem;flex-wrap:wrap;margin:1.5rem 0}.filter{border:1px solid #aaa;border-radius:999px;padding:.25rem .65rem;text-decoration:none;font-size:.9rem}.filter[aria-current="true"]{background:#222;color:#fff}.post{margin-top:2rem}.category{font-size:.82rem;color:#777}.hidden{display:none}@media(prefers-color-scheme:dark){nav{border-color:#444}}</style>
 <script
     src="https://rybbit.cycorld.com/api/script.js"
     data-site-id="ca76392dfdfa"
@@ -18,21 +18,46 @@
 <nav aria-label="site"><a href="/">Home</a><a href="/blog/">Blog</a><a href="/projects.html">Projects</a><a href="/profile.html">Profile</a></nav>
 <main>
 <h1>Blog</h1>
-<section class="post">
+<div class="filters" aria-label="categories">
+<a class="filter" href="/blog/">전체</a>
+<a class="filter" href="/blog/?category=essay" data-category-filter="essay">에세이</a>
+<a class="filter" href="/blog/?category=review" data-category-filter="review">리뷰</a>
+<a class="filter" href="/blog/?category=study" data-category-filter="study">공부</a>
+</div>
+<section class="post" data-category="essay">
+<p class="category">에세이</p>
+<h2><a href="/blog/ax-management-redesign.html">AX는 자동화가 아니라 경영의 재설계다</a></h2>
+<p><time datetime="2026-07-10">2026-07-10</time></p>
+<p>비용 절감과 인력 감축을 넘어, 암묵지와 아메바 경영을 통해 일하는 방식 자체를 다시 설계하는 AX에 대한 생각.</p>
+</section>
+<section class="post" data-category="review">
+<p class="category">리뷰</p>
 <h2><a href="/blog/knock-agent-vfs-bash.html">파일을 도구보다 앞에: Knock Agent의 가상 파일시스템과 bash 설계</a></h2>
 <p><time datetime="2026-07-10">2026-07-10</time></p>
 <p>Knock가 제품 내 AI Agent를 virtual filesystem, bash, CLI, skill, eval로 설계한 방식을 한국어로 요약·해설.</p>
 </section>
-<section class="post">
+<section class="post" data-category="study">
+<p class="category">공부</p>
 <h2><a href="/blog/seven-lenses.html">세상을 다르게 보게 하는 7개의 렌즈</a></h2>
 <p><time datetime="2026-07-05">2026-07-05</time></p>
 <p>생존자 편향, 인센티브 설계, 셸링 포인트, 죄수의 딜레마, 쾌락 적응, 린디 효과, 오버턴 창을 이야기와 실전 예시로 정리.</p>
 </section>
-<section class="post">
+<section class="post" data-category="review">
+<p class="category">리뷰</p>
 <h2><a href="/blog/agent-decomposition.html">Agent는 프롬프트가 아니라 구조로 좋아진다</a></h2>
 <p><time datetime="2026-07-03">2026-07-03</time></p>
 <p>Anthropic Code w/ Claude 2026 Agent Decomposition 세션 정리.</p>
 </section>
 </main>
+<script>
+const category=new URLSearchParams(location.search).get('category');
+if(category){
+  document.querySelectorAll('.post').forEach(post=>post.classList.toggle('hidden',post.dataset.category!==category));
+  const active=document.querySelector(`[data-category-filter="${category}"]`);
+  if(active) active.setAttribute('aria-current','true');
+}else{
+  document.querySelector('.filters .filter').setAttribute('aria-current','true');
+}
+</script>
 </body>
 </html>
