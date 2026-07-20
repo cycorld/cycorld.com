@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Cerebras가 사내 지식베이스를 만든 방식을 살펴보고, Company Brain을 중앙 위키가 아닌 살아 있는 검색·근거화 계층으로 해석한다.">
+<title>회사의 뇌는 중앙 위키가 아니다 | cycorld</title>
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f)})(window,document,'script','dataLayer','GTM-MTWNTBB');</script>
+<style>
+:root{color-scheme:light dark;--line:#d4d4d4;--muted:#666;--panel:#f5f7f9;--ink:#111;--accent:#165dff}*{box-sizing:border-box}body{max-width:48rem;margin:6vh auto;padding:0 1rem;font:16px/1.72 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;overflow-wrap:anywhere}a{color:inherit}nav{margin:1rem 0 2rem;padding:.75rem 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}nav a{display:inline-block;margin-right:1rem;font-weight:600;text-decoration:none}h1{font-size:clamp(2rem,7vw,3rem);line-height:1.12;letter-spacing:-.035em;margin:.35rem 0 1rem}h2{margin-top:2.8rem;line-height:1.3;letter-spacing:-.02em}h3{margin-top:2rem}.lead{font-size:1.16rem;line-height:1.65}.muted,time{color:var(--muted)}.category{display:inline-block;padding:.15rem .55rem;border:1px solid #aaa;border-radius:999px;font-size:.82rem;text-decoration:none}blockquote{border-left:4px solid var(--accent);margin:2rem 0;padding:.35rem 0 .35rem 1.1rem;font-size:1.13rem}table{border-collapse:collapse;width:100%;font-size:.93rem;margin:1.3rem 0}td,th{border:1px solid var(--line);padding:.55rem;text-align:left;vertical-align:top}.diagram{margin:2rem 0;padding:1rem;border:1px solid var(--line);border-radius:14px;background:#07111f;color:#e5edf7}.diagram svg{display:block;width:100%;height:auto}.diagram figcaption{color:#a8b8ca;font-size:.85rem;margin-top:.8rem}.callout{background:var(--panel);color:var(--ink);padding:1rem 1.1rem;border-radius:10px;margin:1.5rem 0}.source-list li{margin:.5rem 0}code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}ol li,ul li{margin:.35rem 0}.checklist li{margin:.65rem 0}@media(max-width:600px){body{margin-top:3vh}table{display:block;overflow-x:auto;white-space:normal}.diagram{padding:.55rem}nav a{margin-right:.7rem}}@media(prefers-color-scheme:dark){:root{--line:#3b4652;--muted:#a7b0bb;--panel:#151c24;--ink:#eef2f6}blockquote{border-color:#79a6ff}}
+</style>
+<script src="https://rybbit.cycorld.com/api/script.js" data-site-id="ca76392dfdfa" defer></script>
+</head>
+<body>
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MTWNTBB" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<nav aria-label="site"><a href="/">Home</a><a href="/blog/">Blog</a><a href="/projects.html">Projects</a><a href="/profile.html">Profile</a></nav>
+<article>
+<header>
+<p><a class="category" href="/blog/?category=review">리뷰</a></p>
+<h1>회사의 뇌는 중앙 위키가 아니다</h1>
+<p><time datetime="2026-07-20">2026-07-20</time></p>
+<p class="lead">Cerebras가 만든 사내 지식베이스를 읽으며 가장 인상적이었던 것은 검색 기술보다 출발점이었다. 회사의 정보는 원래 흩어져 있다. 문제는 흩어져 있다는 사실이 아니라, 필요한 순간에 근거와 함께 다시 찾을 수 없다는 데 있다.</p>
+</header>
+
+<blockquote>Company Brain은 모든 정보를 한곳으로 옮기는 프로젝트가 아니다. 정보가 생기는 곳은 그대로 두고, 그 위에 검색·권한·최신성·인용을 묶는 공통 계층을 만드는 일이다.</blockquote>
+
+<h2>왜 이 글을 읽었나</h2>
+<p>회사 지식을 AI가 읽게 만들자는 이야기는 이제 흔하다. 보통은 문서를 한곳에 모으고, 벡터 데이터베이스에 넣고, 챗봇을 붙이는 그림으로 끝난다. 하지만 실제 회사의 지식은 그렇게 단정하지 않다.</p>
+<p>결정은 Slack에 있고, 현재 사양은 Wiki에 있고, 실제 동작은 코드에 있으며, 예외는 incident 기록에 남는다. 같은 질문에도 프로젝트와 권한에 따라 다른 답이 필요하다. 어제 맞았던 운영 정보가 오늘은 틀릴 수도 있다.</p>
+<p>Cerebras의 <em>How We Built Our Knowledge Base</em>는 이 복잡함을 피하지 않는다. 이 글이 흥미로운 이유다.</p>
+
+<h2>원문의 한 줄 주장</h2>
+<p>Cerebras는 Slack, 문서, 코드, incident 같은 원천을 하나의 도구로 강제 이전하지 않았다. 대신 각 원천을 수집하고, 검색 가능한 지식 단위로 정리한 뒤, 여러 검색 신호를 합쳐 답과 출처를 내놓는 시스템을 만들었다.</p>
+<p>회사가 공개한 수치에 따르면 이 지식베이스는 출시 후 3개월 만에 사람·자동화·agent가 하루 15,000건 이상의 질문에 사용한다. 다만 이것은 높은 사용량을 보여주는 자사 수치다. 답변 정확도, 운영비, 권한 누출률, 사업 성과는 공개되지 않았다.</p>
+
+<h2>Company Brain의 실제 구조</h2>
+<figure class="diagram" aria-labelledby="diagram-title diagram-desc">
+<svg viewBox="0 0 900 590" role="img">
+<title id="diagram-title">분산된 회사 정보가 근거 있는 답변으로 변하는 구조</title>
+<desc id="diagram-desc">Slack, Wiki, Code, Incidents를 connector가 수집하고 evidence schema로 정규화한다. lexical, semantic, rarity, freshness 검색 결과를 RRF와 reranker로 합친 뒤 citation이 포함된 답변을 생성한다. 권한과 repair queue가 전 과정을 감싼다.</desc>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#7dd3fc"/></marker><pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse"><path d="M32 0H0V32" fill="none" stroke="#17304a" stroke-width="1"/></pattern></defs>
+<rect width="900" height="590" rx="16" fill="#07111f"/><rect width="900" height="590" rx="16" fill="url(#grid)" opacity=".5"/>
+<text x="40" y="48" fill="#f8fafc" font-size="24" font-weight="700">살아 있는 Company Context Layer</text>
+<text x="40" y="76" fill="#94a3b8" font-size="14">원천은 유지하고, 검색·권한·최신성·근거를 통합한다</text>
+<!-- arrows first -->
+<g stroke="#7dd3fc" stroke-width="3" fill="none" marker-end="url(#arrow)"><path d="M200 185H285"/><path d="M455 185H535"/><path d="M690 185V274"/><path d="M690 354V430"/><path d="M615 470H500"/></g>
+<!-- source cards -->
+<g font-family="system-ui,sans-serif"><text x="42" y="115" fill="#94a3b8" font-size="13">DISTRIBUTED SOURCES</text>
+<g fill="#12263a" stroke="#94a3b8" stroke-width="1.5"><rect x="40" y="132" width="160" height="44" rx="8"/><rect x="40" y="184" width="160" height="44" rx="8"/><rect x="40" y="236" width="160" height="44" rx="8"/><rect x="40" y="288" width="160" height="44" rx="8"/></g>
+<g fill="#e2e8f0" font-size="15"><text x="62" y="160">Slack · 회의</text><text x="62" y="212">Wiki · 문서</text><text x="62" y="264">Code · PR</text><text x="62" y="316">Incident · 티켓</text></g>
+<!-- connector -->
+<rect x="285" y="137" width="170" height="96" rx="10" fill="#063f38" stroke="#34d399" stroke-width="2"/><text x="310" y="175" fill="#d1fae5" font-size="17" font-weight="700">Connector</text><text x="310" y="202" fill="#9de8cc" font-size="13">수집 · 증분 동기화</text>
+<!-- evidence -->
+<rect x="535" y="125" width="310" height="120" rx="10" fill="#2c1c55" stroke="#a78bfa" stroke-width="2"/><text x="565" y="164" fill="#ede9fe" font-size="17" font-weight="700">Evidence Schema</text><text x="565" y="193" fill="#c4b5fd" font-size="13">질문 · 요약 · 해결 · 시스템 · 코드 참조</text><text x="565" y="219" fill="#c4b5fd" font-size="13">source · timestamp · version · ACL · citation</text>
+<!-- retrieval -->
+<rect x="535" y="274" width="310" height="80" rx="10" fill="#083344" stroke="#22d3ee" stroke-width="2"/><text x="562" y="307" fill="#cffafe" font-size="17" font-weight="700">Hybrid Retrieval</text><text x="562" y="333" fill="#a5f3fc" font-size="13">Lexical + Semantic + IDF + Freshness</text>
+<!-- fusion -->
+<rect x="535" y="430" width="310" height="80" rx="10" fill="#78350f" stroke="#fbbf24" stroke-width="2"/><text x="562" y="463" fill="#fef3c7" font-size="17" font-weight="700">Fusion &amp; Grounding</text><text x="562" y="489" fill="#fde68a" font-size="13">RRF → Dedupe → Rerank → Context</text>
+<!-- answer -->
+<rect x="250" y="417" width="250" height="106" rx="10" fill="#3f1727" stroke="#fb7185" stroke-width="2"/><text x="278" y="454" fill="#ffe4e6" font-size="17" font-weight="700">Answer + Citations</text><text x="278" y="480" fill="#fecdd3" font-size="13">모르면 Unknown</text><text x="278" y="502" fill="#fecdd3" font-size="13">충돌하면 Repair Queue</text>
+<!-- boundary -->
+<rect x="225" y="98" width="650" height="455" rx="18" fill="none" stroke="#fb7185" stroke-width="2" stroke-dasharray="8 7"/><text x="635" y="546" fill="#fda4af" font-size="13">Permission · Scope · Audit Boundary</text>
+</g></svg>
+<figcaption>도식 1. Company Brain은 중앙 저장소가 아니라 분산 원천 위에 놓이는 context layer다.</figcaption>
+</figure>
+
+<h2>단일 벡터 검색으로는 왜 부족한가</h2>
+<p>“의미가 비슷한 문서를 찾는다”는 일만 놓고 보면 embedding은 강력하다. 하지만 회사에서 묻는 질문은 의미 검색만으로 해결되지 않는다.</p>
+<table>
+<thead><tr><th>검색 신호</th><th>잘 찾는 것</th><th>막아주는 실패</th></tr></thead>
+<tbody>
+<tr><td>Full-text / ripgrep</td><td>오류 문자열, flag, hostname, 코드 경로</td><td>정확한 식별자가 비슷한 문장에 밀리는 문제</td></tr>
+<tr><td>Embedding</td><td>표현은 다르지만 뜻이 같은 질문</td><td>단어가 다르다는 이유로 관련 문서를 놓치는 문제</td></tr>
+<tr><td>IDF</td><td>드물고 중요한 기술 용어</td><td>짧은 잡담이 기술 답변보다 높게 잡히는 문제</td></tr>
+<tr><td>Age decay</td><td>최근 운영 정보</td><td>폐기된 인프라 설명이 계속 답으로 나오는 문제</td></tr>
+<tr><td>RRF + reranker</td><td>여러 검색 결과의 합의</td><td>한 종류의 점수를 지나치게 믿는 문제</td></tr>
+</tbody>
+</table>
+<p>여기서 중요한 판단은 “어떤 검색 기술이 최고인가”가 아니다. 질문마다 필요한 신호가 다르므로 여러 검색기를 병렬로 돌리고, 마지막에 근거를 보며 합쳐야 한다는 점이다.</p>
+
+<h2>원문을 그대로 넣는 것보다 어려운 일</h2>
+<p>Slack thread를 통째로 embedding하면 대화의 소음까지 검색된다. 반대로 LLM으로 지나치게 요약하면 중요한 단서와 반대 의견이 사라진다.</p>
+<p>Cerebras는 대화를 질문, 요약, 해결책, 관련 시스템, 코드 참조 같은 검색 가능한 단위로 정리한다. 나는 이 구조에서 두 가지를 같이 지켜야 한다고 본다.</p>
+<ol>
+<li><strong>정규화된 지식 단위</strong>는 빠르고 정확한 검색을 위해 필요하다.</li>
+<li><strong>원문과 인용</strong>은 요약 과정에서 사라진 맥락을 확인하기 위해 필요하다.</li>
+</ol>
+<p>정리된 답만 남기면 시스템은 곧 자신이 만든 요약을 사실처럼 재인용하기 시작한다. 그래서 raw source, 변환 이력, citation은 부가 기능이 아니라 안전장치다.</p>
+
+<h2>내가 동의하는 지점</h2>
+<h3>정보의 생성 위치를 존중한다</h3>
+<p>개발자는 코드를 Git에서 보고, 영업은 고객 정보를 CRM에서 보고, 운영자는 incident 기록을 티켓에서 본다. 모든 사람에게 새 위키로 옮겨 적으라고 요구하면 복사본만 늘고 최신성은 떨어진다. Connector가 원천을 따라가는 편이 현실적이다.</p>
+<h3>검색 범위를 먼저 좁힌다</h3>
+<p>회사의 모든 것을 항상 검색하면 더 똑똑해지는 것이 아니라 noise와 권한 위험이 커진다. 프로젝트, 역할, 업무 단계별로 기본 검색 범위를 정하고, 필요할 때만 넓히는 구조가 맞다.</p>
+<h3>MCP 도구는 좁게 만든다</h3>
+<p><code>search_slack</code>, <code>search_code</code>, <code>who_knows</code>처럼 근거를 돌려주는 작은 도구는 안정적이다. 어떤 도구를 언제 조합하고 답을 어떻게 만들지는 client agent가 맡는 편이 확장하기 쉽다.</p>
+
+<h2>내가 유보하는 지점</h2>
+<p>하루 15,000건의 질문은 분명 강한 사용 신호다. 그러나 사용량과 정확성은 같은 말이 아니다. 오래된 답을 얼마나 자주 내놓는지, 출처 없는 답이 얼마나 되는지, 다른 프로젝트의 비공개 정보가 섞이지 않는지는 별도의 지표가 필요하다.</p>
+<div class="callout"><strong>내가 보고 싶은 운영 지표</strong><br>canonical-source hit rate · citation coverage · stale-hit rate · accepted-answer rate · permission leakage · unknown/contradiction 처리율 · repair latency</div>
+<p>또 age decay는 최신 문서를 높여주지만, 오래됐어도 여전히 기준인 설계 문서를 낮출 수 있다. 날짜만으로 권위를 판단하지 말고 authoritative status, version, owner, tombstone을 함께 봐야 한다.</p>
+
+<h2>한국 기업에서 시작한다면</h2>
+<p>새로운 RAG 플랫폼부터 도입하지 않겠다. 먼저 실제로 반복되는 질문 20개를 고르겠다. “지난 장애의 원인은 무엇이었나”, “이 고객에게 약속한 기능은 무엇인가”, “현재 배포 절차는 어디에 있는가”처럼 답의 출처가 명확한 질문이 좋다.</p>
+<ol class="checklist">
+<li>정답이 있는 canonical source를 지정한다.</li>
+<li>현재 검색으로 그 문서가 상위에 나오는지 기록한다.</li>
+<li>ID, 경로, 오류 문자열이 정확히 보존되는지 본다.</li>
+<li>오래된 문서가 최신 문서를 이기는지 확인한다.</li>
+<li>다른 프로젝트나 권한 밖 정보가 섞이는지 본다.</li>
+<li>근거가 없을 때 “모른다”고 멈추는지 확인한다.</li>
+</ol>
+<p>그다음 lexical search, embedding, freshness, project scope를 한 번에 하나씩 추가한다. 전후 평가가 좋아진 변화만 남긴다. 기술을 많이 붙이는 것보다 틀린 답이 왜 나왔는지 고칠 수 있는 구조가 먼저다.</p>
+
+<h2>마치며</h2>
+<p>Company Brain이라는 표현은 하나의 거대한 두뇌를 떠올리게 한다. 하지만 실제로 필요한 것은 더 분산된 구조에 가깝다. 각 시스템은 자기 일을 계속하고, 공통 context layer가 필요한 순간에 근거를 모은다.</p>
+<p>그래서 질문을 바꿔야 한다.</p>
+<blockquote>우리 회사의 문서가 얼마나 많이 쌓였는가가 아니라, 중요한 질문에 최신 근거와 권한을 지키며 답할 수 있는가?</blockquote>
+<p>나는 이 질문부터 실제 업무 20개로 검증해보려 한다. Company Brain의 출발점은 대규모 이관이 아니라, 자주 묻는 질문 하나를 틀리지 않게 답하는 일이다.</p>
+
+<h2>원문과 참고 자료</h2>
+<ul class="source-list">
+<li><a href="https://www.cerebras.ai/blog/how-we-built-our-knowledge-base">Cerebras — How We Built Our Knowledge Base</a> (Isaac Tai, Daniel Kim, Mike Gao, 2026-07-15)</li>
+<li><a href="https://www.threads.com/@choi.openai/post/Da9o6Tsj2yZ">@choi.openai의 Threads 해설</a> — 원문을 발견한 경로</li>
+</ul>
+<p class="muted">이 글은 원문의 전체 번역이 아니라 구현 구조를 요약하고, 실제 조직 적용 조건과 한계를 덧붙인 리뷰다. Cerebras의 사용량 수치는 회사가 공개한 수치이며 독립 검증 결과는 아니다.</p>
+</article>
+</body>
+</html>
