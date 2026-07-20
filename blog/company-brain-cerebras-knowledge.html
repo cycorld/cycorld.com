@@ -7,7 +7,7 @@
 <title>회사의 뇌는 중앙 위키가 아니다 | cycorld</title>
 <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f)})(window,document,'script','dataLayer','GTM-MTWNTBB');</script>
 <style>
-:root{color-scheme:light dark;--line:#d4d4d4;--muted:#666;--panel:#f5f7f9;--ink:#111;--accent:#165dff}*{box-sizing:border-box}body{max-width:48rem;margin:6vh auto;padding:0 1rem;font:16px/1.72 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;overflow-wrap:anywhere}a{color:inherit}nav{margin:1rem 0 2rem;padding:.75rem 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}nav a{display:inline-block;margin-right:1rem;font-weight:600;text-decoration:none}h1{font-size:clamp(2rem,7vw,3rem);line-height:1.12;letter-spacing:-.035em;margin:.35rem 0 1rem}h2{margin-top:2.8rem;line-height:1.3;letter-spacing:-.02em}h3{margin-top:2rem}.lead{font-size:1.16rem;line-height:1.65}.muted,time{color:var(--muted)}.category{display:inline-block;padding:.15rem .55rem;border:1px solid #aaa;border-radius:999px;font-size:.82rem;text-decoration:none}blockquote{border-left:4px solid var(--accent);margin:2rem 0;padding:.35rem 0 .35rem 1.1rem;font-size:1.13rem}table{border-collapse:collapse;width:100%;font-size:.93rem;margin:1.3rem 0}td,th{border:1px solid var(--line);padding:.55rem;text-align:left;vertical-align:top}.diagram{margin:2rem 0;padding:1rem;border:1px solid var(--line);border-radius:14px;background:#07111f;color:#e5edf7}.diagram svg{display:block;width:100%;height:auto}.diagram figcaption{color:#a8b8ca;font-size:.85rem;margin-top:.8rem}.callout{background:var(--panel);color:var(--ink);padding:1rem 1.1rem;border-radius:10px;margin:1.5rem 0}.source-list li{margin:.5rem 0}code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}ol li,ul li{margin:.35rem 0}.checklist li{margin:.65rem 0}@media(max-width:600px){body{margin-top:3vh}table{display:block;overflow-x:auto;white-space:normal}.diagram{padding:.55rem}nav a{margin-right:.7rem}}@media(prefers-color-scheme:dark){:root{--line:#3b4652;--muted:#a7b0bb;--panel:#151c24;--ink:#eef2f6}blockquote{border-color:#79a6ff}}
+:root{color-scheme:light dark;--line:#d4d4d4;--muted:#666;--panel:#f5f7f9;--ink:#111;--accent:#165dff}*{box-sizing:border-box}body{max-width:48rem;margin:6vh auto;padding:0 1rem;font:16px/1.72 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;overflow-wrap:anywhere}a{color:inherit}nav{margin:1rem 0 2rem;padding:.75rem 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}nav a{display:inline-block;margin-right:1rem;font-weight:600;text-decoration:none}h1{font-size:clamp(2rem,7vw,3rem);line-height:1.12;letter-spacing:-.035em;margin:.35rem 0 1rem}h2{margin-top:2.8rem;line-height:1.3;letter-spacing:-.02em}h3{margin-top:2rem}.lead{font-size:1.16rem;line-height:1.65}.muted,time{color:var(--muted)}.category{display:inline-block;padding:.15rem .55rem;border:1px solid #aaa;border-radius:999px;font-size:.82rem;text-decoration:none}blockquote{border-left:4px solid var(--accent);margin:2rem 0;padding:.35rem 0 .35rem 1.1rem;font-size:1.13rem}table{border-collapse:collapse;width:100%;font-size:.93rem;margin:1.3rem 0}td,th{border:1px solid var(--line);padding:.55rem;text-align:left;vertical-align:top}.diagram{margin:2rem 0;padding:1rem;border:1px solid var(--line);border-radius:14px;background:#07111f;color:#e5edf7}.diagram svg{display:block;width:100%;height:auto}.diagram figcaption{color:#a8b8ca;font-size:.85rem;margin-top:.8rem}.callout{background:var(--panel);color:var(--ink);padding:1rem 1.1rem;border-radius:10px;margin:1.5rem 0}.source-list li{margin:.5rem 0}code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}pre{max-width:100%;overflow-x:auto;padding:1rem;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--ink);font-size:.85rem;line-height:1.55}ol li,ul li{margin:.35rem 0}.checklist li{margin:.65rem 0}@media(max-width:600px){body{margin-top:3vh}table{display:block;overflow-x:auto;white-space:normal}.diagram{padding:.55rem}nav a{margin-right:.7rem}}@media(prefers-color-scheme:dark){:root{--line:#3b4652;--muted:#a7b0bb;--panel:#151c24;--ink:#eef2f6}blockquote{border-color:#79a6ff}}
 </style>
 <script src="https://rybbit.cycorld.com/api/script.js" data-site-id="ca76392dfdfa" defer></script>
 </head>
@@ -64,6 +64,42 @@
 <figcaption>도식 1. Company Brain은 중앙 저장소가 아니라 분산 원천 위에 놓이는 context layer다.</figcaption>
 </figure>
 
+<h2>Cerebras의 구현을 뜯어보면</h2>
+<p>원문에는 따라 해볼 만한 구현 선택이 꽤 구체적으로 공개되어 있다. 핵심은 거대한 AI 모델이 아니라, 서로 다른 실패를 막는 작은 장치들을 한 파이프라인에 배치한 데 있다.</p>
+
+<h3>1. 저장소는 단순하게, connector는 원천별로</h3>
+<p>중심에는 <strong>하나의 Postgres embeddings table</strong>이 있다. Slack thread, Wiki, 코드 조각, netlist, 사내 DB에서 나온 데이터가 모두 <code>document + embedding + metadata + source + timestamps</code>라는 공통 형태로 들어간다. Vector는 <strong>3,072차원</strong>이고, <code>pgvector</code>의 <strong>HNSW</strong> 인덱스를 사용한다.</p>
+<p>대신 connector는 원천별로 나눈다. 각 connector가 “무엇을 읽고, 어떻게 연결하며, 얼마나 자주 동기화할지”를 책임진다. 팀이 기존 DB를 연결할 때도 작은 Python plugin이 공통 row를 내보내게 하면 이후 검색 계층은 바꾸지 않아도 된다. 이 분리가 중요한 이유는 새 SaaS나 사내 DB를 붙일 때 전체 RAG pipeline을 다시 만들지 않아도 되기 때문이다.</p>
+
+<h3>2. Slack은 메시지가 아니라 thread를 상태 단위로 다룬다</h3>
+<p>Cerebras는 Slack <strong>Socket Mode</strong>의 WebSocket event를 받아 즉시 acknowledge하고 stable event ID로 중복을 제거한다. 새 reply 하나만 저장하지 않고, 해당 parent와 모든 reply를 다시 가져와 <strong>thread 전체를 한 row로 upsert</strong>한다. 참여자와 마지막 활동 시각도 함께 갱신된다. polling보다 실시간성이 좋고 Web API rate limit도 덜 쓴다.</p>
+<p>Raw thread에는 Postgres full-text <strong>GIN index</strong>를 걸어 error string과 flag를 즉시 찾게 한다. Vector 검색용으로는 원문을 그대로 embedding하지 않는다. LLM extractor가 전체 thread에서 다음 구조를 만든다.</p>
+<pre><code>{
+  "question": "엔지니어가 실제로 검색할 한 줄 질문",
+  "summary": "무슨 일이 있었는가",
+  "resolution": "어떻게 해결했는가",
+  "systems": ["관련 시스템"],
+  "code_refs": ["flag", "class", "path"]
+}</code></pre>
+<p>이 정규화 문서를 embedding하자 raw transcript를 직접 embedding했을 때보다 검색 정확도가 유의미하게 좋아졌다고 Cerebras는 설명한다. 다만 원문 thread와 source ID는 버리지 않는다. 검색은 정규화 문서로 하고, 검증은 원문 citation으로 돌아간다.</p>
+
+<h3>3. 긴 thread의 묻힌 답은 burst embedding으로 살린다</h3>
+<p>Thread summary만으로는 긴 대화 중간의 중요한 한 문장이 사라질 수 있다. 그래서 같은 작성자가 연속으로 쓴 메시지를 <strong>burst</strong>로 묶고, thread topic을 앞에 붙여 별도로 embedding한다. 모든 잡담을 넣지는 않는다. Cerebras가 공개한 통과 신호는 다음과 같다.</p>
+<ul>
+<li>corpus 기준 희귀 token의 <strong>IDF가 4.0 이상</strong></li>
+<li>합친 burst가 <strong>200자 이상</strong></li>
+<li>reaction이 하나 이상 있어 social boost를 받음</li>
+</ul>
+<p>이 조건들을 가중 결합한 threshold를 넘은 burst만 저장한다. “좋아요, 해볼게요” 같은 짧은 반응은 줄이고, 희귀한 config flag가 포함된 기술 설명은 thread summary와 별개의 검색 입구를 얻는다.</p>
+
+<h3>4. 코드는 언어 경계를 따라 자르고 변경분만 다시 embedding한다</h3>
+<p>40GB를 넘는 repository도 있어 전체 재색인은 비현실적이었다. Cerebras는 <a href="https://cocoindex.io/">CocoIndex</a>를 사용해 class → method → 작은 block 순서의 <strong>language-aware recursive chunking</strong>을 적용한다. 큰 파일 하나가 file-level과 function-level 등 여러 해상도의 record를 만들 수 있다.</p>
+<p>동기화 상태도 같은 Postgres에 두고, commit마다 바뀐 code chunk만 다시 embedding한다. Repository onboarding은 config와 pull request로 받고 file-path allowlist/denylist를 둔다. 여기서 얻을 아이디어는 “코드를 벡터화할 것인가”보다 <strong>grep이 잘하는 exact match와 semantic code search를 함께 두고, 증분 색인을 운영 가능하게 만드는 것</strong>이다.</p>
+
+<h3>5. 질문마다 필요한 도구부터 계획한다</h3>
+<p>모든 질의를 모든 원천에 던지지 않는다. 가벼운 planner가 현재 project와 질문을 보고 <code>subsystem_index</code>, <code>search</code>, <code>search_slack</code>, <code>search_code</code>, <code>recent_prs</code>, <code>who_knows</code> 중 필요한 도구를 고른다. Executor는 이를 병렬 실행하고 결과를 공통 evidence schema로 바꾼다. 마지막 synthesis model만 답과 citation을 만든다.</p>
+<p>MCP에서는 더 얇다. 각 tool은 가능하면 LLM 없이 한 retrieval primitive와 raw evidence row만 돌려준다. Claude Code 같은 client가 호출 순서와 합성을 맡는다. 이 설계는 검색 계층을 특정 agent에 종속시키지 않고, 비용과 latency를 관찰하기도 쉽게 만든다.</p>
+
 <h2>단일 벡터 검색으로는 왜 부족한가</h2>
 <p>“의미가 비슷한 문서를 찾는다”는 일만 놓고 보면 embedding은 강력하다. 하지만 회사에서 묻는 질문은 의미 검색만으로 해결되지 않는다.</p>
 <table>
@@ -77,6 +113,12 @@
 </tbody>
 </table>
 <p>여기서 중요한 판단은 “어떤 검색 기술이 최고인가”가 아니다. 질문마다 필요한 신호가 다르므로 여러 검색기를 병렬로 돌리고, 마지막에 근거를 보며 합쳐야 한다는 점이다.</p>
+
+<h3>여섯 목록을 어떻게 한 순위로 합치는가</h3>
+<p>Cerebras는 vector, full-text, thread summary, graph, Wiki vector, Slack full-text처럼 서로 점수 체계가 다른 <strong>여섯 ranked list</strong>를 병렬로 만든다. 이를 억지로 같은 점수로 환산하지 않고 <strong>Reciprocal Rank Fusion</strong>으로 합친다.</p>
+<pre><code>RRF(d) = Σ 1 / (60 + rank_l(d))</code></pre>
+<p><code>k=60</code>이라는 완충값 때문에 한 검색기에서만 1등인 문서보다 여러 검색기에서 꾸준히 상위에 나온 문서가 유리해진다. 그다음 같은 원천의 중복 chunk를 하나로 합치고, 한 파일이 결과를 독점하지 않도록 source별 개수를 제한해 <strong>상위 20개</strong>를 만든다.</p>
+<p>작은 reranker model이 원 질문과 후보를 보고 0–10점을 매겨 <strong>상위 10개</strong>만 남긴다. 마지막으로 Wiki section이 선택됐다면 앞뒤 두 section을 다시 붙인다. 검색용으로 잘게 자르되, 답을 만들 때 heading·전제·주의사항을 복원하는 것이다. 최종 evidence packet은 그래서 <strong>fusion → source dedupe → diversity cap → question-aware rerank → neighbor context expansion</strong>을 모두 거친다.</p>
 
 <h2>원문을 그대로 넣는 것보다 어려운 일</h2>
 <p>Slack thread를 통째로 embedding하면 대화의 소음까지 검색된다. 반대로 LLM으로 지나치게 요약하면 중요한 단서와 반대 의견이 사라진다.</p>
@@ -97,7 +139,22 @@
 
 <h2>내가 유보하는 지점</h2>
 <p>하루 15,000건의 질문은 분명 강한 사용 신호다. 그러나 사용량과 정확성은 같은 말이 아니다. 오래된 답을 얼마나 자주 내놓는지, 출처 없는 답이 얼마나 되는지, 다른 프로젝트의 비공개 정보가 섞이지 않는지는 별도의 지표가 필요하다.</p>
-<div class="callout"><strong>내가 보고 싶은 운영 지표</strong><br>canonical-source hit rate · citation coverage · stale-hit rate · accepted-answer rate · permission leakage · unknown/contradiction 처리율 · repair latency</div>
+
+<h3>내가 실제 운영에서 보고 싶은 일곱 지표</h3>
+<p>아래 지표는 Cerebras가 공개한 dashboard 항목이 아니다. 공개된 구조를 실제 회사에 운영한다면 내가 추가로 측정할 지표다. 먼저 정답과 권한이 표시된 질문 세트를 만들고, 자동 집계와 표본 human review를 함께 해야 한다.</p>
+<table>
+<thead><tr><th>지표</th><th>어떻게 재는가</th><th>왜 필요한가</th></tr></thead>
+<tbody>
+<tr><td><strong>Canonical-source hit rate</strong></td><td>정답 원천이 정해진 평가 질문 중 그 원천이 retrieval top-k에 포함된 비율</td><td>답변 모델 이전에 검색 계층이 진짜 기준 문서를 찾았는지 분리해서 본다. 낮으면 prompt를 고칠 일이 아니라 connector·scope·ranking을 고쳐야 한다.</td></tr>
+<tr><td><strong>Citation coverage</strong></td><td>검증 가능한 주요 주장 중 직접 뒷받침하는 citation이 붙은 비율. 링크 개수가 아니라 claim 단위로 센다.</td><td>그럴듯한 문장 뒤에 무관한 링크 하나를 붙이는 citation laundering을 막는다. 사용자가 답을 원문까지 추적할 수 있어야 한다.</td></tr>
+<tr><td><strong>Stale-hit rate</strong></td><td>최종 evidence 또는 답에 폐기·대체·유효기간 경과 source가 포함된 비율</td><td>오래된 runbook이 검색 상위에 남으면 답은 자연스럽지만 실행은 위험하다. timestamp뿐 아니라 version, owner, authoritative status, tombstone을 함께 기록해야 측정할 수 있다.</td></tr>
+<tr><td><strong>Accepted-answer rate</strong></td><td>사용자가 수정 없이 채택했거나 후속 행동에서 유효하다고 확인된 답의 비율</td><td>retrieval 점수가 높아도 업무에 쓸 수 없을 수 있다. 단순 thumbs-up보다 “복사해 사용”, “ticket 해결”, “재질문 없음” 같은 행동 신호를 함께 본다.</td></tr>
+<tr><td><strong>Permission leakage</strong></td><td>요청자의 ACL 밖 source가 retrieval, citation, answer 어느 단계에서든 노출된 건수와 비율</td><td>평균 품질보다 우선하는 stop metric이다. 0을 목표로 하고, synthetic canary와 red-team query로 지속 검사해야 한다.</td></tr>
+<tr><td><strong>Unknown / contradiction 처리율</strong></td><td>근거 부족 또는 권위 있는 원천 간 충돌이 심어진 평가 질문 중, 단정하지 않고 unknown·충돌·escalation으로 처리한 비율</td><td>모르는 답을 꾸며내거나 최신 문서와 구 문서를 임의로 섞는 실패를 잰다. 답변률을 높이는 것보다 올바르게 멈추는 능력이 중요하다.</td></tr>
+<tr><td><strong>Repair latency</strong></td><td>오답·오래된 source·권한 문제를 감지한 시점부터 source 수정, 재색인, 검증 통과까지 걸린 시간의 median과 p95</td><td>지식베이스는 반드시 틀린다. 핵심은 무오류가 아니라, 틀린 근거가 얼마나 오래 유통되는지다. connector owner와 repair queue가 있어야 줄일 수 있다.</td></tr>
+</tbody>
+</table>
+<div class="callout"><strong>읽는 순서도 중요하다.</strong> Permission leakage는 단 한 건도 허용하지 않는 안전 gate다. 그다음 canonical-source hit rate와 stale-hit rate로 retrieval을 보고, citation coverage와 unknown 처리율로 grounding을 본다. Accepted-answer rate는 마지막 업무 효용이고, repair latency는 시스템이 장기적으로 건강한지 보여준다.</div>
 <p>또 age decay는 최신 문서를 높여주지만, 오래됐어도 여전히 기준인 설계 문서를 낮출 수 있다. 날짜만으로 권위를 판단하지 말고 authoritative status, version, owner, tombstone을 함께 봐야 한다.</p>
 
 <h2>한국 기업에서 시작한다면</h2>
@@ -112,6 +169,20 @@
 </ol>
 <p>그다음 lexical search, embedding, freshness, project scope를 한 번에 하나씩 추가한다. 전후 평가가 좋아진 변화만 남긴다. 기술을 많이 붙이는 것보다 틀린 답이 왜 나왔는지 고칠 수 있는 구조가 먼저다.</p>
 
+<h3>따라 만드는 최소 설계</h3>
+<p>Cerebras의 규모를 처음부터 복제할 필요는 없다. 아래 순서면 작은 팀에서도 핵심 가설을 검증할 수 있다.</p>
+<ol class="checklist">
+<li><strong>질문 세트:</strong> 실제 반복 질문 20개와 canonical source, 허용 ACL, 최신 version을 표로 만든다.</li>
+<li><strong>공통 row:</strong> <code>id, project_id, source_type, source_id, document, raw_uri, embedding, updated_at, ACL, authoritative_status</code>를 갖는 Postgres table부터 만든다.</li>
+<li><strong>두 connector:</strong> Wiki와 Slack 한 channel만 연결한다. Slack reply가 오면 thread 전체를 재수집하고 stable ID로 upsert한다.</li>
+<li><strong>두 표현:</strong> raw source에는 GIN full-text index를 두고, 검색용 normalized artifact에는 vector index를 둔다. 원문을 덮어쓰지 않는다.</li>
+<li><strong>세 retrieval:</strong> full-text, vector, freshness-aware ranking을 각각 top-k로 실행한 뒤 RRF로 합친다.</li>
+<li><strong>근거 packet:</strong> source-level dedupe, project/ACL filter, 주변 context 복원 후에만 synthesis model로 넘긴다.</li>
+<li><strong>관측:</strong> 질문, 선택된 tool, 후보 source, rank, citation, user feedback, repair event를 immutable log로 남긴다.</li>
+<li><strong>확장:</strong> 20개 질문에서 기준선을 넘은 뒤 burst embedding, code indexing, recent PR, who-knows를 하나씩 추가한다.</li>
+</ol>
+<div class="callout"><strong>공개되지 않은 부분도 있다.</strong> Cerebras는 embedding model 이름, distillation·reranker model과 prompt, 각 retriever weight, age-decay 함수, ACL schema, latency·비용, production 정확도를 공개하지 않았다. 따라서 <code>3,072-dim</code>이나 threshold를 정답처럼 복사하기보다, 자기 질문 세트에서 baseline → 한 가지 변경 → 재평가로 선택해야 한다.</div>
+
 <h2>마치며</h2>
 <p>Company Brain이라는 표현은 하나의 거대한 두뇌를 떠올리게 한다. 하지만 실제로 필요한 것은 더 분산된 구조에 가깝다. 각 시스템은 자기 일을 계속하고, 공통 context layer가 필요한 순간에 근거를 모은다.</p>
 <p>그래서 질문을 바꿔야 한다.</p>
@@ -121,6 +192,10 @@
 <h2>원문과 참고 자료</h2>
 <ul class="source-list">
 <li><a href="https://www.cerebras.ai/blog/how-we-built-our-knowledge-base">Cerebras — How We Built Our Knowledge Base</a> (Isaac Tai, Daniel Kim, Mike Gao, 2026-07-15)</li>
+<li><a href="https://arxiv.org/abs/1603.09320">Malkov &amp; Yashunin — HNSW</a></li>
+<li><a href="https://doi.org/10.1145/1571941.1572114">Cormack, Clarke &amp; Büttcher — Reciprocal Rank Fusion</a></li>
+<li><a href="https://www.anthropic.com/engineering/contextual-retrieval">Anthropic — Introducing Contextual Retrieval</a></li>
+<li><a href="https://cocoindex.io/">CocoIndex — incremental code/document indexing</a></li>
 <li><a href="https://www.threads.com/@choi.openai/post/Da9o6Tsj2yZ">@choi.openai의 Threads 해설</a> — 원문을 발견한 경로</li>
 </ul>
 <p class="muted">이 글은 원문의 전체 번역이 아니라 구현 구조를 요약하고, 실제 조직 적용 조건과 한계를 덧붙인 리뷰다. Cerebras의 사용량 수치는 회사가 공개한 수치이며 독립 검증 결과는 아니다.</p>
