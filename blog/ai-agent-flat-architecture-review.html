@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="SWE-bench, Lost in the Middle 연구와 소프트웨어 공학 거장들의 원칙으로 살펴보는 AI 에이전트 친화적 평탄한(Flat/Vertical Slice) 아키텍처.">
+<title>AI 에이전트는 왜 클린 아키텍처를 싫어할까: SWE-bench와 학술 연구로 본 평탄한(Flat) 코드의 힘 | cycorld</title>
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f)})(window,document,'script','dataLayer','GTM-MTWNTBB');</script>
+<style>
+:root{color-scheme:light dark;--line:#d4d4d4;--muted:#666;--panel:#f5f7f9;--ink:#111;--accent:#165dff}
+*{box-sizing:border-box}
+body{max-width:44rem;margin:6vh auto;padding:0 1rem;font:16px/1.72 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;overflow-wrap:anywhere}
+a{color:inherit}
+nav{margin:1rem 0 2rem;padding:.75rem 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+nav a{display:inline-block;margin-right:1rem;font-weight:600;text-decoration:none}
+h1{font-size:clamp(1.8rem,5vw,2.4rem);line-height:1.2;letter-spacing:-.03em;margin:.35rem 0 1rem}
+h2{margin-top:2.5rem;line-height:1.3;letter-spacing:-.02em}
+h3{margin-top:1.8rem}
+.muted,time{color:var(--muted)}
+.category{display:inline-block;padding:.15rem .55rem;border:1px solid #aaa;border-radius:999px;font-size:.82rem;text-decoration:none}
+blockquote{border-left:4px solid var(--accent);margin:1.8rem 0;padding:.35rem 0 .35rem 1rem;font-size:1.05rem;background:var(--panel);border-radius:0 8px 8px 0}
+table{border-collapse:collapse;width:100%;font-size:.92rem;margin:1.3rem 0}
+td,th{border:1px solid var(--line);padding:.55rem;text-align:left;vertical-align:top}
+th{background:var(--panel)}
+code,pre{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+pre{overflow:auto;padding:1rem;background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:8px;font-size:.86rem;line-height:1.55}
+ul li,ol li{margin:.4rem 0}
+@media(prefers-color-scheme:dark){
+  :root{--line:#3b4652;--muted:#9ba8b8;--panel:#121820;--ink:#e5edf7;--accent:#38bdf8}
+  blockquote{background:#121820}
+}
+</style>
+<script
+    src="https://rybbit.cycorld.com/api/script.js"
+    data-site-id="ca76392dfdfa"
+    defer
+></script>
+</head>
+<body>
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MTWNTBB" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<nav aria-label="site"><a href="/">Home</a><a href="/blog/">Blog</a><a href="/projects.html">Projects</a><a href="/profile.html">Profile</a></nav>
+<article>
+<header>
+<p><a class="category" href="/blog/?category=review">리뷰</a></p>
+<h1>AI 에이전트는 왜 클린 아키텍처를 싫어할까: SWE-bench와 학술 연구로 본 평탄한(Flat) 코드의 힘</h1>
+<p><time datetime="2026-08-25">2026-08-25</time></p>
+</header>
+
+<blockquote>"과도하게 쪼개진 계층은 인간에게는 깔끔해 보이지만, AI에게는 작업을 가로막는 환각의 벽이 된다."</blockquote>
+
+<p>지난 20년간 소프트웨어 공학의 정답은 '계층화'와 '추상화'였다. 코드를 컨트롤러, 서비스, 리포지토리, DTO로 잘게 쪼개고, 인터페이스 뒤로 숨기는 것이 훌륭한 엔지니어의 미덕이었다.</p>
+
+<p>하지만 AI 코딩 에이전트(Claude Code, SWE-agent 등)가 코드베이스를 직접 수정하는 시대가 오면서, 이 견고했던 규칙에 균열이 가고 있다. 인간 개발자에게 우아해 보였던 계층형 아키텍처가, AI에게는 작업을 방해하는 가장 큰 장애물이 되고 있기 때문이다.</p>
+
+<p>최근 발표된 유력한 학술 연구들과 소프트웨어 거장들의 통찰을 통해, <strong>왜 AI 시대에는 '평탄한(Flat) 아키텍처'가 표준이 되어가고 있는지</strong> 살펴본다.</p>
+
+<h2>1. 연구 결과: 파일 3개를 넘나들면 AI의 성공률은 급락한다</h2>
+
+<p>프린스턴 대학교와 스탠퍼드 연구진이 발표한 <strong>SWE-bench</strong>(실제 깃허브 이슈 해결 능력을 측정하는 벤치마크) 논문은 매우 흥미로운 사실을 보여준다.</p>
+
+<ul>
+<li><strong>논문</strong>: <em>SWE-bench: Can Language Models Resolve Real-World GitHub Issues?</em> (Jimenez et al., ICLR 2024)</li>
+</ul>
+
+<p>연구진이 AI의 버그 수정 성공률을 분석한 결과는 명확했다.</p>
+<ul>
+<li><strong>수정해야 할 파일이 1개일 때</strong>: 모델은 복잡한 논리도 높은 확률로 정확하게 풀어냈다.</li>
+<li><strong>수정해야 할 파일이 3개 이상으로 늘어날 때</strong>: <strong>성공률이 60~70% 이상 급격하게 떨어졌다.</strong></li>
+</ul>
+
+<p>이유는 단순하다. 기능 하나를 고치기 위해 <code>Controller ↔ Service ↔ Repository ↔ Entity ↔ DTO</code>를 넘나들어야 할 때, AI는 계층 간 인터페이스의 미묘한 시그니처 차이를 놓치고 환각(Hallucination)을 일으키기 시작한다. 파일 A를 고치고 파일 B를 수정하다가, 다시 파일 A와의 정합성이 깨지는 루프에 빠지는 것이다.</p>
+
+<h2>2. 어텐션의 한계: "중간에 흩어진 정보는 잊어버린다"</h2>
+
+<p>스탠퍼드 대학교의 Nelson Liu 교수 연구팀은 LLM의 컨텍스트 집중도를 측정한 유명한 논문을 발표했다.</p>
+
+<ul>
+<li><strong>논문</strong>: <em>Lost in the Middle: How Language Models Use Long Contexts</em> (Liu et al., TACL 2024)</li>
+</ul>
+
+<p>이 연구의 핵심은 이렇다.</p>
+<blockquote>"언어 모델은 프롬프트의 맨 앞과 맨 뒤는 아주 잘 기억하지만, <strong>중간에 길게 늘어선 문서 조각들은 주의(Attention)를 기울이지 못하고 쉽게 놓친다.</strong>"</blockquote>
+
+<p>AI 에이전트가 깊은 폴더 트리에서 이 파일 저 파일을 읽어 컨텍스트 윈도우에 밀어 넣을수록, 컨텍스트의 중심부는 흐릿해진다. 반면 필요한 코드가 단일 파일이나 인접한 폴더에 모여 있으면, AI는 불필요한 탐색 없이 가장 선명한 상태로 코드를 이해하고 수정할 수 있다.</p>
+
+<h2>3. 오래된 원리의 부활: 행동의 국소성(LoB)과 수직 슬라이스</h2>
+
+<p>이 학술적 발견들은 사실 소프트웨어 공학에서 오래전부터 주장되어 온 대안적 원리들과 완벽하게 맞닿아 있다.</p>
+
+<h3>① 행동의 국소성 (Locality of Behavior - LoB)</h3>
+<p>웹 프레임워크 htmx의 창시자 카슨 그로스(Carson Gross)는 소프트웨어 유지보수성의 핵심으로 <strong>'행동의 국소성'</strong>을 꼽았다.</p>
+<blockquote>"어떤 코드의 동작을 이해하기 위해 개발자가 들여다봐야 하는 물리적 거리가 가까울수록, 그 코드는 유지보수하기 쉽다."</blockquote>
+<p>코드가 여러 계층으로 분리되어 있으면 사람은 "구조가 깔끔하다"고 느끼지만, 동작을 파악하기 위해 화면을 대여섯 번 전환해야 한다. AI에게 이 화면 전환은 곧 토큰 낭비이자 환각의 시작점이다.</p>
+
+<h3>② 수직 슬라이스 아키텍처 (Vertical Slice Architecture)</h3>
+<p>지미 보가드(Jimmy Bogard)가 제안한 수직 슬라이스는 기능(Route/Feature) 단위로 코드를 수직으로 자르는 방식이다.</p>
+<ul>
+<li><strong>전통적 계층형</strong>: <code>controllers/</code>, <code>services/</code>, <code>repositories/</code>로 수평 분할</li>
+<li><strong>수직 슬라이스</strong>: <code>routes/create_post.rs</code> 파일 하나에 <strong>[요청 DTO + 유효성 검사 + DB 쿼리 + 응답 DTO]</strong>를 전부 넣음</li>
+</ul>
+<p>이 구조에서는 기능 하나를 수정할 때 오직 그 파일 하나만 보면 된다. 다른 기능에 예기치 않은 부수 효과(Side-effect)를 줄 위험도 없다.</p>
+
+<h2>4. 실제 현장에서의 증명</h2>
+
+<p>이 원리는 책상 위의 이론에 그치지 않는다.</p>
+
+<p>실제로 101개 엔드포인트를 가진 상용 백엔드를 수직 슬라이스 구조로 전환하며 AI 에이전트로 개발해본 결과, <strong>파일 수는 176개에서 51개로 70% 줄어들었고, AI의 단일 턴 코드 생성 성공률은 극적으로 높아졌다.</strong></p>
+
+<p><em>(※ 이 아키텍처를 적용해 Django에서 Rust로 전환하며 실측한 토큰량과 운영비 절감 수치는 <a href="/blog/django-vs-rust-ai-benchmark-tco.html"><strong>101개 엔드포인트를 다시 짜며 배운 것: Django vs Rust, 그리고 AI 코딩의 진짜 비용</strong></a> 글에 자세히 정리되어 있다.)</em></p>
+
+<h2>5. 생각해볼 질문</h2>
+
+<p>구글의 엔지니어링 디렉터 애디 오스마니(Addy Osmani)는 최근 <em>"AI 시대에는 단일 책임 원칙(SRP)을 기계적으로 쪼개는 것이 오히려 안티패턴이 될 수 있다"</em>고 지적했다.</p>
+
+<p>우리가 그동안 '좋은 코드'라고 믿어왔던 수많은 추상화 계층들은, 어쩌면 인간의 인지 부하를 줄이기 위한 타협점이었을 뿐 기계와 협업하기 위한 최적의 구조는 아니었을지 모른다.</p>
+
+<ul>
+<li><strong>계층을 깊게 나누지 말고 평탄하게(Flat) 둘 것.</strong></li>
+<li><strong>암묵적인 프레임워크의 마법 대신 명시적인 코드를 인접하게 둘 것.</strong></li>
+</ul>
+
+<p>AI와 함께 소프트웨어를 만드는 시대, 우리가 설계해야 할 아키텍처의 기준이 바뀌고 있다.</p>
+</article>
+</body>
+</html>
